@@ -3,8 +3,17 @@ const bodyParser = require("body-parser");
 const exec = require("child_process").exec;
 
 const app = express();
+const csp = require("helmet-csp");
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(
+    csp({
+        defaultSrc: ["'Self'", "default.com"],
+        scriptSrc: ["'Self'", "'unsafe-inline"],
+        styleSrc: ["style.com"],
+    })
+);
 
 var form = `
   <form method="POST" action="/host">
