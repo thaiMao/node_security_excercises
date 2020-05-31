@@ -12,3 +12,6 @@ For example attacked could send google.com | cat etc/shadow? to see contents of 
 Recommendations
 
 Use exeFile instead of exe. exeFile executes the file directly, limiting the surface area for attack. Downside is you lose the ability to run complex commands with piping.
+
+Whitelist variables supplied by the user
+i.e `if(host.match(/^[-\.][^a-zA-Z0-9\-\.]/)) { // invalid input }`
