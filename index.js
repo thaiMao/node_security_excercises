@@ -1,38 +1,37 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const exec = require("child_process").exec;
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get("/", function (req, res) {
-    var form = `<form method="POST" action="/calc">
-         <input type="text" name="formula" placeholder="formula" />
-         <input type="submit" value="Calculate" />
-         </form> 
-  `;
+var form = `
+  <form method="POST" action="/host">
+  <input type="text" name="host" placeholder="host" />
+  <input type="submit" value="Get host" />
+  </form> 
+`;
 
+app.get("/", function (req, res) {
     res.send(form);
 });
 
-app.post("/calc", function (req, res) {
-    var formula = req.body.formula;
-    var cleanFormula = formula.match(/[^0-9\-\/\*\+]/);
+app.post("/host", function (req, res) {
+    execF(`host ${req.body.host}`, function (err, stdout, stderr) {
+        if (err || stderr) {
+            console.log(err || stderr);
+            res.sendStatus(500);
+            return;
+        }
 
-    if (cleanFormula.length < 1) {
-        res.status(400).send("Invalid input");
-        return;
-    }
-
-    var result;
-    try {
-        eval(`result = ${formula}`);
-    } catch (e) {
-        res.status(400).send("Invalid input");
-        return;
-    }
-
-    res.send(`The result of ${cleanFormula} is: ${result}`);
+        res.send(
+            `<h3>Lookup for: ${req.body.host}</h3>
+            <pre>${stdout}</pre>
+            ${form}
+          `
+        );
+    });
 });
 
 app.listen(3000);
