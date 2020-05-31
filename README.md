@@ -14,4 +14,6 @@ Recommendations
 Use exeFile instead of exe. exeFile executes the file directly, limiting the surface area for attack. Downside is you lose the ability to run complex commands with piping.
 
 Whitelist variables supplied by the user
-i.e `if(host.match(/^[-\.][^a-zA-Z0-9\-\.]/)) { // invalid input }`
+i.e `if(host.match(/^[-\.][^a-zA-Z0-9\-\.]/)) { // invalid input }` prevents user from creating other commands
+
+Limit run rights, by running executed command as a user with limited set of rights. Most Unix systems have a `nobody` user
